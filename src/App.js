@@ -1,29 +1,28 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import { addGunAsync, removeGun, addGun } from './index.redux'
 // import { Button } from 'antd-mobile'
 
+@connect(
+  state=>({num: state}),
+  {addGun, removeGun, addGunAsync}
+)
 class App extends Component {
   render() {
-    const boss = '李云龙'
     return (
-      <div className="App">
-        <h1>{boss}</h1>
-        <Oneclass></Oneclass>
+      <div>
+        <h2>现在有机枪{this.props.num}把</h2>
+        <button onClick={this.props.addGun}>申请武器</button>
+        <button onClick={this.props.removeGun}>上交武器</button>
+        <button onClick={this.props.addGunAsync}>拖两天再给</button>
       </div>
     );
   }
 }
 
-// import { addGun } from './index.redux.js'
-// <Button onClick={()=>store.dispath(addGun())}></Button>
-
-class Oneclass extends Component {
-  render() {
-    const boss = 'hi'
-    return (
-      <div>
-        <h2>{boss}</h2>
-      </div>
-    )
-  }
-}
+// const mapStatetoProps = (state)=> {
+//   return {num: state}
+// }
+// const actionCreators = {addGunAsync, removeGun, addGun}
+// App = connect(mapStatetoProps, actionCreators)(App)
 export default App;
