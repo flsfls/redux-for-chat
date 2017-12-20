@@ -6,12 +6,9 @@ import { Button } from 'antd-mobile'
 
 import { login } from './Auth.redux'
 
-@connect(state=>({auth:state}),
-        {login}
-      )
+@connect(state=>({auth:state}),{login})
+
 class Auth extends React.Component{
-
-
   render() {
     return (
       <div>
