@@ -24,10 +24,13 @@ class BossInfo extends React.Component{
   }
 
   render() {
+    const pathname = this.props.location.pathname
     const redirectTo = this.props.redirectTo
+    console.log('path',this.props)
+
     return(
       <div>
-        {redirectTo ? <Redirect to={redirectTo} /> : ''}
+        {redirectTo && redirectTo !== pathname ? <Redirect to={redirectTo} /> : ''}
         <NavBar mode="dark" >BOSS完善信息页</NavBar>
         <AvatarSelector selectAvatar={(imgname)=>this.setState({
           avatar: imgname
@@ -50,7 +53,7 @@ class BossInfo extends React.Component{
 
 				</TextareaItem>
 				<Button
-					type='primary' onClick={()=>4}>保存</Button>
+					type='primary' onClick={()=>this.props.updateinfo(this.state)}>保存</Button>
       </div>
     )
   }
