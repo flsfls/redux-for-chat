@@ -11,6 +11,8 @@ import AuthRoute from './component/authroute/authroute'
 import reducers from './reducer'
 import './config'
 import BossInfo from './container/bossinfo/bossinfo'
+import GeniusInfo from './container/geniusinfo/geniusinfo'
+
 
 const store = createStore(reducers, compose(
   applyMiddleware(thunk),
@@ -28,6 +30,7 @@ ReactDOM.render(
         <div>
           <AuthRoute></AuthRoute>
           <Route path="/bossinfo" component={BossInfo}></Route>
+          <Route path='/geniusinfo' component={GeniusInfo}></Route>
           <Route path="/boss" component={Boss}></Route>
           <Route path="/login" component={Login}></Route>
           <Route path="/register" component={Register}></Route>
