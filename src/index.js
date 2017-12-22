@@ -12,6 +12,7 @@ import reducers from './reducer'
 import './config'
 import BossInfo from './container/bossinfo/bossinfo'
 import GeniusInfo from './container/geniusinfo/geniusinfo'
+import Dashboard from './component/dashboard/dashboard'
 
 
 const store = createStore(reducers, compose(
@@ -19,9 +20,7 @@ const store = createStore(reducers, compose(
   window.devToolsExtension ? window.devToolsExtension() : f=>f
 ))
 
-function Boss() {
-  return <h2>BOSS页面</h2>
-}
+
 // 登录, 没有登录信息, 统一跳转login
 ReactDOM.render(
   (
@@ -29,11 +28,13 @@ ReactDOM.render(
       <BrowserRouter>
         <div>
           <AuthRoute></AuthRoute>
-          <Route path="/bossinfo" component={BossInfo}></Route>
-          <Route path='/geniusinfo' component={GeniusInfo}></Route>
-          <Route path="/boss" component={Boss}></Route>
-          <Route path="/login" component={Login}></Route>
-          <Route path="/register" component={Register}></Route>
+          <Switch>
+            <Route path="/bossinfo" component={BossInfo}></Route>
+            <Route path='/geniusinfo' component={GeniusInfo}></Route>
+            <Route path="/login" component={Login}></Route>
+            <Route path="/register" component={Register}></Route>
+            <Route component={Dashboard}></Route>
+          </Switch>
         </div>
       </BrowserRouter>
     </Provider>

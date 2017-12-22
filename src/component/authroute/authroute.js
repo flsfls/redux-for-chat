@@ -9,8 +9,6 @@ import { connect } from 'react-redux'
 //用于向后台请求用户信息，判断跳转登录还是注册路由
 class AuthRoute extends React.Component {
   componentDidMount() {
-    console.log('AuthRoute-user', this.props.user)
-
     const publicList = ['/login', '/register']
     const pathname = this.props.location.pathname
      if (publicList.indexOf(pathname) > -1) {
@@ -18,7 +16,6 @@ class AuthRoute extends React.Component {
      }
 
     axios.get('/user/info').then(res => {
-      console.log('res', res)
       if (res.status === 200) {
         if (res.data.code === 0) {
           //有登录信息，向redux存储
