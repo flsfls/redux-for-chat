@@ -1,28 +1,25 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import {NavBar} from 'antd-mobile'
-import { connect } from 'react-redux'
-import { Switch, Route } from 'react-router-dom'
+import {Switch, Route} from 'react-router-dom'
 import NavLinkBar from '../navlink/navlink'
 import Boss from '../../component/boss/boss'
 import Genius from '../../component/genius/genius'
-
-function Msg() {
-  return <h1>this is Msg Page</h1>
+function Msg(){
+	return <h2>消息列表页面</h2>
 }
-
-function User() {
-  return <h1>this is User Page</h1>
+function User(){
+	return <h2>个人中心页面</h2>
 }
-
-@connect(state=>state)
+@connect(
+	state=>state
+)
 class Dashboard extends React.Component{
-  constructor(props) {
-    super(props)
-    this.state={}
-  }
-  render() {
-    const {user} = this.props
-    const navList = [
+
+	render(){
+		const {pathname} = this.props.location
+		const user = this.props.user
+		const navList = [
 			{
 				path:'/boss',
 				text:'牛人',
@@ -54,22 +51,27 @@ class Dashboard extends React.Component{
 				component:User
 			}
 		]
-    const {pathname} = this.props.location
-    return (
-      <div>
-        <NavBar className='fixed-header' mode='dard'>
-          {navList.find(v=>v.path==pathname).title}
-        </NavBar>
-        <div style={{marginTop: 45}}>
-          <Switch>
-            {navList.map(v=>(
-              <Route key={v.path} path={v.path} component={v.component}></Route>
-            ))}
-          </Switch>
-        </div>
-        <NavLinkBar data={navList}></NavLinkBar>
-      </div>
-    )
-  }
+
+
+		return (
+			<div>
+				<NavBar className='fixd-header' mode='dard'>{navList.find(v=>v.path==pathname).title}</NavBar>
+				<div style={{marginTop:45}}>
+						<Switch>
+							{navList.map(v=>(
+								<Route key={v.path} path={v.path} component={v.component}></Route>
+							))}
+						</Switch>
+				</div>
+
+				<NavLinkBar data={navList}></NavLinkBar>
+
+			</div>
+		)
+
+
+	}
+
 }
+
 export default Dashboard

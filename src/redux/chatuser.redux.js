@@ -7,13 +7,11 @@ const initState = {
 }
 
 export function chatuser(state=initState, action){
-	switch (action.type) {
+	switch(action.type){
 		case USER_LIST:
-			return {...state, ...action.payload}
-			break;
+			return {...state, userlist:action.payload}
 		default:
 			return state
-
 	}
 }
 
@@ -23,11 +21,12 @@ function userList(data){
 
 export function getUserList(type){
 	return dispatch=>{
-		debugger
-		axios.get('/user/list', type).then(res=>{
-			if (res.status === 200 && res.data.code === 0) {
-				dispatch(userList(res.data.data))
-			}
-		})
+		axios.get('/user/list?type='+type)
+			.then(res=>{
+				if (res.data.code==0) {
+					dispatch(userList(res.data.data))
+				}
+			})
+
 	}
 }
