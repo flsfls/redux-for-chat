@@ -20,9 +20,11 @@ class Chat extends React.Component {
   componentDidMount() {
     //跨域，需要手动连接
     // const socket = io('ws://localhost:9093')
-    this.props.getMsgList()
-    this.props.recvMsg()
-    console.log('zui',this.props)
+
+    // this.props.getMsgList()
+    // this.props.recvMsg()
+    // console.log('zui',this.props)
+
     // socket.on('recvmsg', (data)=>{
     //   this.setState({
     //     msg: [...this.state.msg, data.text]
@@ -41,8 +43,7 @@ class Chat extends React.Component {
   render() {
     const user = this.props.match.params.user
     const Item = List.Item
-    // <p key={v._id}>对方发来的{v.content}</p>
-    // <p key={v._id}>我发送的{v.content}</p>
+
     return (
       <div id="chat-page">
         <NavBar mode="dark">
