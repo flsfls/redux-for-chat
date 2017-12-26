@@ -7,7 +7,7 @@ const User = model.getModel('user')
 const Chat = model.getModel('chat')
 const _filter = {'pwd':0,'__v':0}
 
-
+// Chat.remove({},function(err,doc){})
 //用来查看数据库的用户列表
 Router.get('/list', function(req, res) {
   // User.remove({},function(err,doc){})
@@ -84,7 +84,7 @@ Router.get('/getmsglist', function(req,res) {
     return json.dumps({code:1})
   }
   Chat.find({}, function(err,doc) {
-    return res.json({code: 0, msgs: []})
+    return res.json({code: 0, msgs: doc})
   })
 })
 function md5Pwd(pwd) {

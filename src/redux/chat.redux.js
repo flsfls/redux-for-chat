@@ -16,10 +16,10 @@ const initState = {
 export function chat(state=initState, action) {
   switch (action.type) {
     case MSG_LIST:
-      return {...state, chatmsgs: action.payload, unread: action.payload.filter(v=>!v).length}
+      return {...state, chatmsgs: action.payload, unread: action.payload.filter(v=>!v.read).length}
       break;
     case MSG_RECV:
-      return {...state, chatmsgs:[...state.chatmsgs,action.payload]}
+      return {...state, chatmsgs:[...state.chatmsgs,action.payload], unread:state.unread+1}
     default:
       return state
       break;
