@@ -1,8 +1,10 @@
 import React from 'react'
 import io from 'socket.io-client'
-import { List, InputItem, NavBar } from 'antd-mobile'
+import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
 import {getMsgList, sendMsg, recvMsg} from '../../redux/chat.redux'
+import { getChatId } from '../../util'
+
 
 const socket = io('ws://localhost:9093')
 // socket.on('recvmsg', function(data) {
@@ -21,10 +23,12 @@ class Chat extends React.Component {
     //跨域，需要手动连接
     // const socket = io('ws://localhost:9093')
 
-    // this.props.getMsgList()
-    // this.props.recvMsg()
-    // console.log('zui',this.props)
+    if (!this.props.chat.chatmsgs.length) {
+			this.props.getMsgList()
+			this.props.recvMsg()
+		}
 
+    console.log('props',this.props)
     // socket.on('recvmsg', (data)=>{
     //   this.setState({
     //     msg: [...this.state.msg, data.text]
@@ -41,21 +45,32 @@ class Chat extends React.Component {
     this.setState({text: ''})
   }
   render() {
+    const from = this.props.user._id
     const user = this.props.match.params.user
     const Item = List.Item
+    const users = this.props.chat.users
 
+    const chatmsgs = this.props.chat.chatmsgs.filter(v=>getChatId(from,user) == v.chatid)
     return (
       <div id="chat-page">
-        <NavBar mode="dark">
-          {user}
+        <NavBar
+                mode="dark"
+                icon={<Icon type='left'></Icon>}
+                onLeftClick={()=>{this.props.history.goBack()}}
+        >
+          {users[user] ? users[user].name : ''}
         </NavBar>
-        {this.props.chat.chatmsgs.map(v=>{
+        {chatmsgs.map((v,i)=>{
+            const avatar = require(`../img/${users[v.from].avatar}.png`)
             return v.from == user ? (
-              <List key={v._id}>
-                <Item>{v.content}</Item>
+              <List key={i}>
+                <Item
+                      thumb={avatar}>{v.content}</Item>
               </List>
-            ) :(<List key={v._id}>
-                  <Item className="chat-me">{v.content}</Item>
+            ) :(<List key={i}>
+                  <Item
+                        className="chat-me"
+                        extra={<img src={avatar} />}>{v.content}</Item>
                 </List>)
         })}
         <div className="stack-footer">

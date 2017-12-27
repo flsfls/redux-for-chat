@@ -83,8 +83,16 @@ Router.get('/getmsglist', function(req,res) {
   if (!userid) {
     return json.dumps({code:1})
   }
-  Chat.find({}, function(err,doc) {
-    return res.json({code: 0, msgs: doc})
+  let users = {}
+  User.find({}, function(err, doc) {
+    doc.forEach(v=>{
+      users[v._id] = {name: v.user, avatar: v.avatar}
+    })
+  })
+  Chat.find({'$or': [{from: userid}, {to: userid}]}, function(err,doc) {
+    if (!err) {
+      return res.json({code: 0, msgs: doc, users})
+    }
   })
 })
 function md5Pwd(pwd) {
