@@ -21,6 +21,10 @@ class Chat extends React.Component {
     //跨域，需要手动连接
     // const socket = io('ws://localhost:9093')
 
+    if (!this.props.chat.chatmsgs.length) {
+      this.props.getMsgList()
+      this.props.recvMsg()
+    }
     // this.props.getMsgList()
     // this.props.recvMsg()
     // console.log('zui',this.props)
@@ -41,16 +45,20 @@ class Chat extends React.Component {
     this.setState({text: ''})
   }
   render() {
-    const user = this.props.match.params.user
+    //to
+    const userid = this.props.match.params.user
+    const users = this.props.chat.users
+
+
     const Item = List.Item
 
     return (
       <div id="chat-page">
         <NavBar mode="dark">
-          {user}
+          {users[userid] ? users[userid].name : ''}
         </NavBar>
         {this.props.chat.chatmsgs.map(v=>{
-            return v.from == user ? (
+            return v.from == userid ? (
               <List key={v._id}>
                 <Item>{v.content}</Item>
               </List>

@@ -80,11 +80,19 @@ Router.post('/update', function(req,res) {
 
 Router.get('/getmsglist', function(req,res) {
   const userid = req.cookies.userid
+
   if (!userid) {
     return json.dumps({code:1})
   }
-  Chat.find({}, function(err,doc) {
-    return res.json({code: 0, msgs: doc})
+  let users = {}
+  User.find({},function(err, doc) {
+    doc.forEach(v=> {
+      users[v._id] = {name: v.user, avatar: v.avatar}
+    })
+  })
+  //$or表示多条件查询
+  Chat.find({'$or':[{from:userid}, {to:userid}]}, function(err,doc) {
+    return res.json({code: 0, msgs: doc, users})
   })
 })
 function md5Pwd(pwd) {
