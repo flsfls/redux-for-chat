@@ -24,22 +24,36 @@ class Msg extends React.Component {
       msgGroup[v.chatid].push(v)
     })
 
-    const chatList = Object.values(msgGroup)
+    const chatList = Object.values(msgGroup).sort((a,b)=> {
+      const a_last = this.getLast(a).creatTime
+      const b_last = this.getLast(b).creatTime
+      return b_last - a_last
+    })
     const userinfo = this.props.chat.users
     console.log('msgGroup',msgGroup)
     console.log('chatList',chatList)
+    //eslint代码校验工具
+    //react16特有的错误处理机制
+    //react性能优化
     return (
       <div>
 
           {chatList.map(v=>{
             const lastItem = this.getLast(v)
+            //是为了显示最新发送或接收的消息
             const targetId = v[0].from == userid ? v[0].to : v[0].from
             const name = userinfo[targetId] && userinfo[targetId].name
             const avatar = userinfo[targetId] && userinfo[targetId].avatar
+            const unreadNum = v.filter(value=> !value.read && value.to === userid).length
             return (
               <List key={lastItem._id}>
-                <Item                
-                  thumb={require(`../img/${avatar}.png`)}>
+                <Item
+                  extra={<Badge text={unreadNum}></Badge>}
+                  thumb={require(`../img/${avatar}.png`)}
+                  arrow="horizontal"
+                  onClick={()=>{
+                    this.props.history.push(`/chat/${targetId}`)
+                  }}>
                     {lastItem.content}
                     <Brief>{name}</Brief>
                 </Item>

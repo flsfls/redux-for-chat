@@ -11,6 +11,7 @@ const _filter = {'pwd':0,'__v':0}
 //用来查看数据库的用户列表
 Router.get('/list', function(req, res) {
   // User.remove({},function(err,doc){})
+  // Chat.remove({},function(err,doc){})
   const {type} = req.query
   User.find({type}, function(err, doc) {
     return res.json({code: 0, data: doc})
@@ -96,6 +97,21 @@ Router.get('/getmsglist', function(req,res) {
     }
   })
 })
+
+Router.post('/readmsg', function(req,res) {
+  const userid = req.cookies.userid
+  const {from} = req.body
+  console.log('from',from)
+  //{'multi':true}表示全局修改
+  Chat.update({from,to:userid},{'$set':{read:true}},{'multi':true}, function(err,doc) {
+    console.log(doc)
+    if (!err) {
+      return res.json({code: 0, data:{num:doc.nModified}})
+    }
+    return res.json({code:1, msg:'修改失败'})
+  })
+})
+
 function md5Pwd(pwd) {
   const salt = 'flsloveldw'
   return utils.md5(utils.md5(pwd+salt))

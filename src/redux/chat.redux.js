@@ -20,10 +20,14 @@ export function chat(state=initState, action) {
       return {...state, chatmsgs: action.payload.msgs, users: action.payload.users, unread: action.payload.msgs.filter(v=>!v.read && v.to == action.userid).length}
       break;
     case MSG_RECV:
-    console.log('a',action.payload)
-    console.log('userid',action.userid)
       let n = action.payload.to == action.userid ? 1 : 0
       return {...state, chatmsgs:[...state.chatmsgs,action.payload], unread:state.unread+n}
+    case MSG_READ:
+        debugger
+        const {from, num} = action.payload
+        return {...state, chatemsgs:state.chatmsgs.map(v=>{
+             return {...v,read:from==v.from?true:v.read}
+        }), unread:state.unread-num}
     default:
       return state
       break;
@@ -54,6 +58,12 @@ export function sendMsg({from,to,msg}) {
 function msgRecv(msg,userid) {
   return {type: MSG_RECV, payload: msg, userid}
 }
+
+function msgRead({from,userid,num}) {
+
+    return {type:MSG_READ,payload:{from,userid,num}}
+}
+
 export function recvMsg() {
   return (dispatch,getState)=>{
     socket.on('recvmsg',data=>{
@@ -61,4 +71,15 @@ export function recvMsg() {
       dispatch(msgRecv(data,userid))
     })
   }
+}
+
+export function readMsg (from) {
+    return (dispatch, getState) => {
+        axios.post('/user/readmsg',{from}).then(res=> {
+            const userid = getState().user._id
+            if(res.status == 200 && res.data.code == 1) {
+                dispatch(msgRead({userid, from, num:res.data.data.num}))
+            }
+        })
+    }
 }

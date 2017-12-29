@@ -2,7 +2,7 @@ import React from 'react'
 import io from 'socket.io-client'
 import { List, InputItem, NavBar, Icon, Grid } from 'antd-mobile'
 import { connect } from 'react-redux'
-import {getMsgList, sendMsg, recvMsg} from '../../redux/chat.redux'
+import {getMsgList, sendMsg, recvMsg, readMsg} from '../../redux/chat.redux'
 import { getChatId } from '../../util'
 
 
@@ -10,7 +10,7 @@ const socket = io('ws://localhost:9093')
 // socket.on('recvmsg', function(data) {
 //   console.log(data)
 // })
-@connect(state=>state, {getMsgList, sendMsg, recvMsg})
+@connect(state=>state, {getMsgList, sendMsg, recvMsg, readMsg})
 class Chat extends React.Component {
   constructor(props) {
     super(props)
@@ -29,12 +29,16 @@ class Chat extends React.Component {
 			this.props.recvMsg()
 		}
 
-    console.log('props',this.props)
+
     // socket.on('recvmsg', (data)=>{
     //   this.setState({
     //     msg: [...this.state.msg, data.text]
     //   })
     // })
+  }
+  componentWillUnmount() {
+    const to = this.props.match.params.user
+    this.props.readMsg(to)
   }
   handleSubmit() {
     // socket.emit('sendmsg', {text: this.state.text})
@@ -89,7 +93,7 @@ class Chat extends React.Component {
               }}
               extra={
                 <div>
-                  
+
                   <span onClick={()=>this.handleSubmit()}>发送</span>
                 </div>
               }>
