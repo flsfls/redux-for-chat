@@ -1,28 +1,32 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux'
-import { addGunAsync, removeGun, addGun } from './index.redux'
+import { BrowserRouter, Route, Redirect,Switch } from 'react-router-dom'
+
+import Login from './container/login/login'
+import Register from './container/register/register'
+import AuthRoute from './component/authroute/authroute'
+import BossInfo from './container/bossinfo/bossinfo'
+import GeniusInfo from './container/geniusinfo/geniusinfo'
+import Dashboard from './component/dashboard/dashboard'
+import Chat from './component/chat/chat'
 // import { Button } from 'antd-mobile'
 
-@connect(
-  state=>({num: state}),
-  {addGun, removeGun, addGunAsync}
-)
+
 class App extends Component {
   render() {
     return (
       <div>
-        <h2>现在有机枪{this.props.num}把</h2>
-        <button onClick={this.props.addGun}>申请武器</button>
-        <button onClick={this.props.removeGun}>上交武器</button>
-        <button onClick={this.props.addGunAsync}>拖两天再给</button>
-      </div>
+				<AuthRoute></AuthRoute>
+				<Switch>
+					<Route path='/bossinfo' component={BossInfo}></Route>
+					<Route path='/geniusinfo' component={GeniusInfo}></Route>
+					<Route path='/login' component={Login}></Route>
+					<Route path='/register' component={Register}></Route>
+					<Route path='/chat/:user'	component={Chat}></Route>
+					<Route component={Dashboard}></Route>
+				</Switch>
+			</div>
     );
   }
 }
 
-// const mapStatetoProps = (state)=> {
-//   return {num: state}
-// }
-// const actionCreators = {addGunAsync, removeGun, addGun}
-// App = connect(mapStatetoProps, actionCreators)(App)
 export default App;

@@ -57,16 +57,25 @@ export function login({user,pwd}){
 	if (!user||!pwd) {
 		return errorMsg('用户密码必须输入')
 	}
-	return dispatch=>{
-		axios.post('/user/login',{user,pwd})
-			.then(res=>{
-				if (res.status==200&&res.data.code===0) {
-					// dispatch(registerSuccess({user,pwd,type}))
-					dispatch(loginSuccess(res.data.data))
-				}else{
-					dispatch(errorMsg(res.data.msg))
-				}
-			})
+	// return dispatch=>{
+	// 	axios.post('/user/login',{user,pwd})
+	// 		.then(res=>{
+	// 			if (res.status==200&&res.data.code===0) {
+	// 				// dispatch(registerSuccess({user,pwd,type}))
+	// 				dispatch(loginSuccess(res.data.data))
+	// 			}else{
+	// 				dispatch(errorMsg(res.data.msg))
+	// 			}
+	// 		})
+	// }
+  return async dispatch=>{
+		const res = await axios.post('/user/login',{user,pwd})
+		if (res.status==200&&res.data.code===0) {
+			// dispatch(registerSuccess({user,pwd,type}))
+			dispatch(loginSuccess(res.data.data))
+		}else{
+			dispatch(errorMsg(res.data.msg))
+		}
 	}
 }
 

@@ -30,7 +30,7 @@ class Msg extends React.Component {
       return b_last - a_last
     })
     const userinfo = this.props.chat.users
-    console.log('msgGroup',msgGroup)
+    console.log('userinfo',userinfo)
     console.log('chatList',chatList)
     //eslint代码校验工具
     //react16特有的错误处理机制
@@ -41,15 +41,17 @@ class Msg extends React.Component {
           {chatList.map(v=>{
             const lastItem = this.getLast(v)
             //是为了显示最新发送或接收的消息
+
             const targetId = v[0].from == userid ? v[0].to : v[0].from
             const name = userinfo[targetId] && userinfo[targetId].name
-            const avatar = userinfo[targetId] && userinfo[targetId].avatar
+            let avatar = userinfo[targetId] && userinfo[targetId].avatar
+            avatar = avatar ? avatar : ''
             const unreadNum = v.filter(value=> !value.read && value.to === userid).length
             return (
               <List key={lastItem._id}>
                 <Item
                   extra={<Badge text={unreadNum}></Badge>}
-                  thumb={require(`../img/${avatar}.png`)}
+                  // thumb={require(`../img/${avatar}.png`)}
                   arrow="horizontal"
                   onClick={()=>{
                     this.props.history.push(`/chat/${targetId}`)

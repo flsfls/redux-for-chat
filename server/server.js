@@ -1,10 +1,35 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser')
-const model =  require('./model')
+import express from 'express'
+import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
+import model from './model'
+
 const Chat = model.getModel('chat')
 
+import path from 'path'
 const app = express()
+
+import React from 'react'
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
+import { Provider } from 'react-redux'
+//把BrowserRouter=>staticRouter
+import { staticRouter } from 'react-router-dom'
+import { renderToString, renderToStaticMarkup} from 'react-dom/server'
+// import AppRender from '../src/App.js'
+//React组件=>div
+
+function App() {
+  return (
+    <div>
+      <h2>server render</h2>
+      <p>imooc</p>
+    </div>
+  )
+
+}
+// console.log(App())
+console.log(renderToString(<App></App>))
+
 //work with express
 const server = require('http').Server(app)
 
@@ -38,6 +63,17 @@ app.use('/user', userRouter)
 // app.listen(9093, function(){
 //   console.log('Node app start at port 9093')
 // })
+//中间件
+app.use(function(req, res, next) {
+  if (req.url.startsWith('/user/') || req.url.startsWith('/static/')) {
+    return next()
+  }
+  // const htmlres = renderToString(<App></App>)
+  // res.send(htmlres)
+  // console.log('path',path.resolve('build/index.html'))
+  return res.sendFile(path.resolve('build/index.html'))
+})
+app.use('/',express.static(path.resolve('build')))
 server.listen(9093, function(){
   console.log('Node app start at port 9093')
 })
