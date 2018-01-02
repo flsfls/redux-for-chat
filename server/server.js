@@ -14,7 +14,7 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 //把BrowserRouter=>staticRouter
 import { staticRouter } from 'react-router-dom'
-import { renderToString, renderToStaticMarkup} from 'react-dom/server'
+import { renderToString, renderToStaticMarkup, renderToNodeStream} from 'react-dom/server'
 // import AppRender from '../src/App.js'
 //React组件=>div
 
