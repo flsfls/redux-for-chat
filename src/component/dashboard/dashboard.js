@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {NavBar} from 'antd-mobile'
-import {Switch, Route} from 'react-router-dom'
+import {Switch, Route, Redirect} from 'react-router-dom'
 import NavLinkBar from '../navlink/navlink'
 import Boss from '../../component/boss/boss'
 import Genius from '../../component/genius/genius'
@@ -58,10 +58,10 @@ class Dashboard extends React.Component{
 			}
 		]
 
-
-		return (
+		const page = navList.find(v=>v.path==pathname)
+		return page ? (
 			<div>
-				<NavBar className='fixd-header' mode='dard'>{navList.find(v=>v.path==pathname).title}</NavBar>
+				<NavBar className='fixd-header' mode='dard'>{page.title}</NavBar>
 				<div style={{marginTop:45}}>
 						<Switch>
 							{navList.map(v=>(
@@ -73,7 +73,7 @@ class Dashboard extends React.Component{
 				<NavLinkBar data={navList}></NavLinkBar>
 
 			</div>
-		)
+		) : <Redirect to='/msg'></Redirect>
 
 
 	}
