@@ -30,8 +30,6 @@ class Msg extends React.Component {
       return b_last - a_last
     })
     const userinfo = this.props.chat.users
-    console.log('userinfo',userinfo)
-    console.log('chatList',chatList)
     //eslint代码校验工具
     //react16特有的错误处理机制
     //react性能优化
