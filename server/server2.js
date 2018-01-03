@@ -21,7 +21,7 @@ import thunk from 'redux-thunk'
 import { Provider } from 'react-redux'
 //把BrowserRouter=>staticRouter
 import { StaticRouter } from 'react-router-dom'
-import { renderToString, renderToNodeStream} from 'react-dom/server'
+import { renderToString, renderToStaticMarkup} from 'react-dom/server'
 import App from '../src/App.js'
 import reducers from '../src/reducer'
 import staticPath from '../build/asset-manifest.json'
@@ -80,12 +80,21 @@ app.use(function(req, res, next) {
   const store = createStore(reducers, compose(
   	applyMiddleware(thunk)
   ))
-
+  let context = {}
+  const markup = renderToString(
+    <Provider store={store}>
+  		<StaticRouter
+        location={req.url}
+        context={context}>
+  			<App></App>
+  		</StaticRouter>
+  	</Provider>
+  )
   const obj = {
     '/msg': 'React聊天信息列表',
     '/boss': 'boss查看牛人列表页面'
   }
-  res.write(`<!doctype html>
+  const pagehtml = `<!doctype html>
   <html lang="en">
     <head>
       <meta charset="utf-8">
@@ -96,27 +105,13 @@ app.use(function(req, res, next) {
       <meta name="description" content="${obj[req.url]}">
     </head>
     <body>
-      <div id="root">`)
-  let context = {}
-  const markupStream = renderToNodeStream(
-    <Provider store={store}>
-  		<StaticRouter
-        location={req.url}
-        context={context}>
-  			<App></App>
-  		</StaticRouter>
-  	</Provider>
-  )
-  //要在res写入之后
-  markupStream.pipe(res,{end:false})
-  markupStream.on('end', ()=> {
-    res.write(`</div>
+      <div id="root">${markup}</div>
       <script src="/${staticPath['main.js']}"></script>
     </body>
-  </html>`)
-  //一定不能忘了这个，要不然会一直转圈
-  res.end()
-  })
+  </html>`
+  // const htmlres = renderToString(<App></App>)
+   res.send(pagehtml)
+
   // return res.sendFile(path.resolve('build/index.html'))
 })
 app.use('/',express.static(path.resolve('build')))
